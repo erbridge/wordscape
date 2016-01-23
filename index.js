@@ -10,6 +10,10 @@ if (!navigator.onLine) {
   );
 }
 
+electron.ipcRenderer.on('clear', function clearWords() {
+  document.body.innerHTML = '';
+});
+
 electron.ipcRenderer.on('display-word', function displayWord(event, word) {
   document.write(word);
 });
