@@ -8,6 +8,7 @@ const createWindow = function createWindow() {
   mainWindow = new electron.BrowserWindow({
     width:  1024,
     height: 768,
+    title:  'WordScape',
   });
 
   mainWindow.loadURL(`file://${__dirname}/index.html`);
