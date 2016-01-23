@@ -7,5 +7,9 @@
   },
   "devDependencies": {
     "electron-prebuilt": "^0.36.5"
+  },
+  "dependencies": {
+    "corpora": "dariusk/corpora",
+    "lodash": "^4.0.0"
   }
 }
