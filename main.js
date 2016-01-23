@@ -2,6 +2,8 @@
 
 const electron = require('electron');
 
+const loop = require('./loop');
+
 let mainWindow;
 
 const createWindow = function createWindow() {
@@ -15,6 +17,10 @@ const createWindow = function createWindow() {
 
   mainWindow.on('closed', function onClosed() {
     mainWindow = null;
+  });
+
+  mainWindow.webContents.on('dom-ready', function onReady() {
+    loop.start(mainWindow);
   });
 };
 
