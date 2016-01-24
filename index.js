@@ -5,6 +5,7 @@
 const electron = require('electron');
 
 const BACKGROUND_COLOUR = 'rgba(255, 255, 255, 1)';
+const CHAR_WIDTH        = 36;
 
 const canvas  = document.createElement('canvas');
 const context = canvas.getContext('2d');
@@ -16,7 +17,7 @@ document.body.appendChild(canvas);
 
 const drawText = function drawText(text, x, y, colour) {
   context.fillStyle = colour;
-  context.font = 'normal 36px monospace';
+  context.font = `normal ${CHAR_WIDTH}px monospace`;
   context.fillText(text, x, y);
 };
 
@@ -45,9 +46,9 @@ const fadeText = function fadeText(
       let yOffset = 0;
 
       if (orientation) {
-        xOffset = 36 * i;
+        xOffset = CHAR_WIDTH * i;
       } else {
-        yOffset = 36 * i;
+        yOffset = CHAR_WIDTH * i;
       }
 
       clearText(char, x + xOffset, y + yOffset);
@@ -84,16 +85,13 @@ electron.ipcRenderer.on('display-words', function displayWords(event, words) {
   let i = 0;
   let word;
 
+  let x = canvas.width / 2;
+  let y = canvas.height / 2;
+
   const interval = setInterval(function displayWord() {
-    const x = 0;
-    const y = canvas.height / 2;
     const orientation = orientations[i];
 
-    const prevWord = word;
-
-    if (prevWord) {
-      fadeOutText(prevWord, x, y, orientations[i - 1]);
-    }
+    let prevWord = word;
 
     word = words[i];
 
@@ -101,9 +99,39 @@ electron.ipcRenderer.on('display-words', function displayWords(event, words) {
       return clearInterval(interval);
     }
 
+    if (prevWord) {
+      let firstMatchingIndexInPrevWord = -1;
+      let firstMatchingIndexInWord = -1;
+
+      // TODO: Get a random intersection, not the first one every time...
+      word.split('').forEach(function findMatchingIndex(char, j) {
+        if (firstMatchingIndexInPrevWord >= 0) {
+          return;
+        }
+
+        firstMatchingIndexInPrevWord = prevWord.indexOf(char);
+
+        if (firstMatchingIndexInPrevWord >= 0) {
+          firstMatchingIndexInWord = j;
+        }
+      });
+
+      prevWord = `${prevWord.substr(0, firstMatchingIndexInPrevWord)} ${prevWord.substr(firstMatchingIndexInPrevWord + 1)}`;
+      word     = `${word.substr(0, firstMatchingIndexInWord)} ${word.substr(firstMatchingIndexInWord + 1)}`;
+
+      fadeOutText(prevWord, x, y, orientations[i - 1]);
+
+      if (orientation) {
+        x -= CHAR_WIDTH * firstMatchingIndexInWord;
+        y += CHAR_WIDTH * firstMatchingIndexInPrevWord;
+      } else {
+        x += CHAR_WIDTH * firstMatchingIndexInPrevWord;
+        y -= CHAR_WIDTH * firstMatchingIndexInWord;
+      }
+    }
+
     fadeInText(word, x, y, orientation);
 
     i++;
-
   }, 2000);
 });
