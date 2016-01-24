@@ -8,9 +8,9 @@ let mainWindow;
 
 const createWindow = function createWindow() {
   mainWindow = new electron.BrowserWindow({
-    width:  1024,
-    height: 768,
-    title:  'WordScape',
+    title:      'WordScape',
+    fullscreen: true,
+    frame:      false,
   });
 
   mainWindow.loadURL(`file://${__dirname}/index.html`);
@@ -19,12 +19,12 @@ const createWindow = function createWindow() {
     mainWindow = null;
   });
 
-  mainWindow.webContents.on('dom-ready', function startLoop() {
+  electron.ipcMain.on('display-words-complete', function restartLoop() {
     loop.start(mainWindow);
   });
 
-  electron.ipcMain.on('display-words-complete', function restartLoop() {
-    loop.start(mainWindow);
+  mainWindow.webContents.on('dom-ready', function startLoop() {
+    loop.start(mainWindow, [ 'WordScape' ]);
   });
 };
 

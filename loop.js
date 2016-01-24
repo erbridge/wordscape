@@ -58,18 +58,22 @@ const createWordList = function createWordList(character) {
 };
 
 module.exports = {
-  start(window) {
+  start(window, initialWords) {
     window.webContents.send('clear');
 
-    getRandomCharacter()
-      .then(createWordList)
-      .then(function displayWords(words) {
-        window.webContents.send('display-words', words);
+    if (initialWords && initialWords.length) {
+      window.webContents.send('display-words', initialWords);
+    } else {
+      getRandomCharacter()
+        .then(createWordList)
+        .then(function displayWords(words) {
+          window.webContents.send('display-words', words);
 
-        return Promise.resolve();
-      })
-      .catch(function onRejected(err) {
-        console.error(err);
-      });
+          return Promise.resolve();
+        })
+        .catch(function onRejected(err) {
+          console.error(err);
+        });
+    }
   },
 };
