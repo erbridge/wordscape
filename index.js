@@ -9,6 +9,9 @@ const BACKGROUND_COLOUR = 'rgba(255, 255, 255, 1)';
 const canvas  = document.createElement('canvas');
 const context = canvas.getContext('2d');
 
+canvas.width  = window.innerWidth * 0.95;
+canvas.height = window.innerHeight * 0.95;
+
 document.body.appendChild(canvas);
 
 const drawText = function drawText(text, x, y, colour) {
