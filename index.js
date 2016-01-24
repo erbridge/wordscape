@@ -4,15 +4,18 @@
 
 const electron = require('electron');
 
-const BACKGROUND_COLOUR = 'rgba(255, 255, 255, 1)';
+const BACKGROUND_COLOUR = 'rgba(0, 0, 0, 1)';
 const CHAR_WIDTH        = 36;
 const FADE_DURATION     = 2000;
 
 const canvas  = document.createElement('canvas');
 const context = canvas.getContext('2d');
 
-canvas.width  = window.innerWidth * 0.95;
-canvas.height = window.innerHeight * 0.95;
+canvas.width  = window.innerWidth;
+canvas.height = window.innerHeight;
+
+context.fillStyle = BACKGROUND_COLOUR;
+context.fillRect(0, 0, canvas.width, canvas.height);
 
 document.body.appendChild(canvas);
 
@@ -25,7 +28,7 @@ const drawText = function drawText(text, x, y, colour) {
 };
 
 const displayText = function displayText(text, x, y, alpha) {
-  drawText(text, x, y, `rgba(0, 0, 0, ${alpha})`);
+  drawText(text, x, y, `rgba(255, 255, 255, ${alpha})`);
 };
 
 const clearText = function clearText(text, x, y) {
