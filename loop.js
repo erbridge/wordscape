@@ -1,6 +1,6 @@
 'use strict';
 
-const fs = require('fs');
+const fs   = require('fs');
 const path = require('path');
 
 const _ = require('lodash');
@@ -49,8 +49,8 @@ module.exports = {
 
     getRandomCharacter()
       .then(createWordList)
-      .then(function displayFirstWord(list) {
-        window.webContents.send('display-word', list[0]);
+      .then(function displayWords(words) {
+        window.webContents.send('display-words', words);
 
         return Promise.resolve();
       })

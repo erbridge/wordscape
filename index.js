@@ -14,6 +14,6 @@ electron.ipcRenderer.on('clear', function clearWords() {
   document.body.innerHTML = '';
 });
 
-electron.ipcRenderer.on('display-word', function displayWord(event, word) {
-  document.write(word);
+electron.ipcRenderer.on('display-words', function displayWords(event, words) {
+  document.write(words.join('<br>'));
 });
