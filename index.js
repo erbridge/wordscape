@@ -28,7 +28,10 @@ const displayText = function displayText(text, x, y, alpha) {
 };
 
 const clearText = function clearText(text, x, y) {
-  drawText(text, x, y, BACKGROUND_COLOUR);
+  context.fillStyle = BACKGROUND_COLOUR;
+  context.fillRect(
+    x - CHAR_WIDTH / 2, y - CHAR_WIDTH / 2, CHAR_WIDTH, CHAR_WIDTH
+  );
 };
 
 const fadeText = function fadeText(
@@ -43,6 +46,10 @@ const fadeText = function fadeText(
   }
 
   const interval = setInterval(function fade() {
+    if (alphas[0] > 1 || alphas[0] < 0) {
+      clearInterval(interval);
+    }
+
     chars.forEach(function fadeChar(char, i) {
       let xOffset = 0;
       let yOffset = 0;
@@ -53,14 +60,13 @@ const fadeText = function fadeText(
         yOffset = CHAR_WIDTH * i;
       }
 
-      clearText(char, x + xOffset, y + yOffset);
+      if (char !== ' ') {
+        clearText(char, x + xOffset, y + yOffset);
+      }
+
       displayText(char, x + xOffset, y + yOffset, alphas[i]);
 
       alphas[i] += step;
-
-      if (alphas[i] > 1 || alphas[i] < 0) {
-        clearInterval(interval);
-      }
     });
   }, 2000 * Math.abs(step));
 };
