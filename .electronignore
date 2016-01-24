@@ -1,0 +1,7 @@
+/build
+/dist
+*.sublime-*
+.electronignore
+.gitignore
+README.md
+packager.json
