@@ -16,8 +16,10 @@ canvas.height = window.innerHeight * 0.95;
 document.body.appendChild(canvas);
 
 const drawText = function drawText(text, x, y, colour) {
-  context.fillStyle = colour;
-  context.font = `normal ${CHAR_WIDTH}px monospace`;
+  context.fillStyle    = colour;
+  context.font         = `normal ${CHAR_WIDTH}px monospace`;
+  context.textAlign    = 'center';
+  context.textBaseline = 'middle';
   context.fillText(text, x, y);
 };
 
@@ -86,7 +88,7 @@ electron.ipcRenderer.on('display-words', function displayWords(event, words) {
   let word;
 
   let x = canvas.width / 2 - words[0].split('').length * CHAR_WIDTH / 2;
-  let y = canvas.height / 2 + CHAR_WIDTH / 2;
+  let y = canvas.height / 2;
 
   const interval = setInterval(function displayWord() {
     const prevOrientation = orientations[i - 1];
