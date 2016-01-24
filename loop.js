@@ -40,6 +40,20 @@ const createWordList = function createWordList(character) {
 
   list.push(_.sample(synonyms));
 
+  const isValid = _.every(list, function sharesLetters(word, i) {
+    const nextWord = list[i + 1];
+
+    if (!nextWord) {
+      return true;
+    }
+
+    return _.intersection(word.split(''), nextWord.split('')).length;
+  });
+
+  if (!isValid) {
+    return createWordList(character);
+  }
+
   return Promise.resolve(list);
 };
 
