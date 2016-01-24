@@ -6,6 +6,7 @@ const electron = require('electron');
 
 const BACKGROUND_COLOUR = 'rgba(255, 255, 255, 1)';
 const CHAR_WIDTH        = 36;
+const FADE_DURATION     = 2000;
 
 const canvas  = document.createElement('canvas');
 const context = canvas.getContext('2d');
@@ -68,7 +69,7 @@ const fadeText = function fadeText(
 
       alphas[i] += step;
     });
-  }, 2000 * Math.abs(step));
+  }, FADE_DURATION * Math.abs(step));
 };
 
 const fadeInText = function fadeInText(text, x, y, orientation) {
@@ -102,7 +103,9 @@ electron.ipcRenderer.on('display-words', function displayWords(event, words) {
     y -= words[0].split('').length * CHAR_WIDTH / 2;
   }
 
-  const interval = setInterval(function displayWord() {
+  let interval;
+
+  const displayWord = function displayWord() {
     const prevOrientation = orientations[i - 1];
     const orientation     = orientations[i];
 
@@ -157,6 +160,12 @@ electron.ipcRenderer.on('display-words', function displayWords(event, words) {
       }
     }
 
-    fadeInText(word, x, y, orientation);
-  }, 2000);
+    setTimeout(function fade() {
+      fadeInText(word, x, y, orientation);
+    }, FADE_DURATION);
+  };
+
+  displayWord();
+
+  interval = setInterval(displayWord, 2 * FADE_DURATION);
 });
