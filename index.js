@@ -93,8 +93,14 @@ electron.ipcRenderer.on('display-words', function displayWords(event, words) {
   let i = 0;
   let word;
 
-  let x = canvas.width / 2 - words[0].split('').length * CHAR_WIDTH / 2;
+  let x = canvas.width / 2;
   let y = canvas.height / 2;
+
+  if (orientations[0]) {
+    x -= words[0].split('').length * CHAR_WIDTH / 2;
+  } else {
+    y -= words[0].split('').length * CHAR_WIDTH / 2;
+  }
 
   const interval = setInterval(function displayWord() {
     const prevOrientation = orientations[i - 1];
