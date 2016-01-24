@@ -16,7 +16,7 @@ document.body.appendChild(canvas);
 
 const drawText = function drawText(text, x, y, colour) {
   context.fillStyle = colour;
-  context.font = 'normal 20pt Arial';
+  context.font = 'normal 36px monospace';
   context.fillText(text, x, y);
 };
 
