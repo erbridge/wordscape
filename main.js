@@ -19,7 +19,11 @@ const createWindow = function createWindow() {
     mainWindow = null;
   });
 
-  mainWindow.webContents.on('dom-ready', function onReady() {
+  mainWindow.webContents.on('dom-ready', function startLoop() {
+    loop.start(mainWindow);
+  });
+
+  electron.ipcMain.on('display-words-complete', function restartLoop() {
     loop.start(mainWindow);
   });
 };

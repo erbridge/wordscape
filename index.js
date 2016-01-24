@@ -60,7 +60,7 @@ const fadeText = function fadeText(
         clearInterval(interval);
       }
     });
-  }, 50);
+  }, 2000 * Math.abs(step));
 };
 
 const fadeInText = function fadeInText(text, x, y, orientation) {
@@ -85,18 +85,31 @@ electron.ipcRenderer.on('display-words', function displayWords(event, words) {
   let i = 0;
   let word;
 
-  let x = canvas.width / 2;
-  let y = canvas.height / 2;
+  let x = canvas.width / 2 - words[0].split('').length * CHAR_WIDTH / 2;
+  let y = canvas.height / 2 + CHAR_WIDTH / 2;
 
   const interval = setInterval(function displayWord() {
-    const orientation = orientations[i];
+    const prevOrientation = orientations[i - 1];
+    const orientation     = orientations[i];
 
-    let prevWord = word;
+    let prevWord = words[i - 1];
 
     word = words[i];
 
+    i++;
+
     if (!word) {
-      return clearInterval(interval);
+      if (!prevWord) {
+        clearInterval(interval);
+
+        electron.ipcRenderer.send('display-words-complete');
+
+        return;
+      }
+
+      fadeOutText(prevWord, x, y, prevOrientation);
+
+      return;
     }
 
     if (prevWord) {
@@ -119,7 +132,7 @@ electron.ipcRenderer.on('display-words', function displayWords(event, words) {
       prevWord = `${prevWord.substr(0, firstMatchingIndexInPrevWord)} ${prevWord.substr(firstMatchingIndexInPrevWord + 1)}`;
       word     = `${word.substr(0, firstMatchingIndexInWord)} ${word.substr(firstMatchingIndexInWord + 1)}`;
 
-      fadeOutText(prevWord, x, y, orientations[i - 1]);
+      fadeOutText(prevWord, x, y, prevOrientation);
 
       if (orientation) {
         x -= CHAR_WIDTH * firstMatchingIndexInWord;
@@ -131,7 +144,5 @@ electron.ipcRenderer.on('display-words', function displayWords(event, words) {
     }
 
     fadeInText(word, x, y, orientation);
-
-    i++;
   }, 2000);
 });
