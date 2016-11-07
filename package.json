@@ -19,8 +19,8 @@
     "dist:win32": "npm run build:win32 && mkdir -p \"dist/win32-$npm_package_version\" && pushd build/win32 && zip -q -r \"../../dist/win32-$npm_package_version/$npm_package_productName-win32-x64-$npm_package_version.zip\" \"$npm_package_productName-win32-x64\" && popd"
   },
   "devDependencies": {
-    "electron-packager": "^5.2.1",
-    "electron-prebuilt": "^0.36.5"
+    "electron-packager": "^8.2.0",
+    "electron-prebuilt": "^1.4.5"
   },
   "dependencies": {
     "corpora": "dariusk/corpora",
