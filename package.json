@@ -24,6 +24,6 @@
   },
   "dependencies": {
     "corpora": "dariusk/corpora",
-    "lodash": "4.0.0"
+    "lodash": "4.17.12"
   }
 }
